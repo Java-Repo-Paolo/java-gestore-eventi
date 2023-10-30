@@ -25,6 +25,8 @@ public class Event {
         this.totalPlaces = totalPlaces;
     }
 
+
+
     //METODI
 
     //GETTER
@@ -54,12 +56,18 @@ public class Event {
         this.title = title;
     }
 
-    public void reservePlaces(int reservedPlaces) {
-        this.reservedPlaces += reservedPlaces;
+    public void addPlaces(int addPlaces) {
+        if (reservedPlaces > totalPlaces || (this.reservedPlaces + addPlaces) > totalPlaces){
+            throw new IllegalArgumentException("Il tuo numero di prenotazioni supera la capienza massima");
+        }
+        this.reservedPlaces += addPlaces;
     }
 
-    public void cancelPlaces(int reservedPlaces) {
-        this.reservedPlaces -= reservedPlaces;
+    public void cancelPlaces(int canceledPlaces, int totalReserved) {
+        if (this.reservedPlaces < canceledPlaces) {
+            throw new IllegalArgumentException("Il numero di posti cancellati supera il numero prenotato");
+        }
+        this.reservedPlaces = totalReserved - canceledPlaces;
     }
 
     public void setDate(LocalDate date) {
