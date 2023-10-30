@@ -6,18 +6,18 @@ import java.time.LocalDate;
 public class Event {
     //ATTRIBUTI
     private String title;
-    private String date;
+    private LocalDate date;
     private int totalPlaces;
     private int reservedPlaces = 0;
 
 
     //COSTRUTTORI
-    public Event(String title, String date, int totalPlaces) throws IllegalArgumentException {
-        LocalDate userDate = LocalDate.parse(date);
+    public Event(String title, LocalDate date, int totalPlaces) throws IllegalArgumentException {
+
         if (totalPlaces <= 0){
             throw new IllegalArgumentException("Non puoi immettere numeri negativi");
         }
-        if (userDate.isAfter(dateNow())){
+        if (date.isBefore(dateNow())){
             throw new IllegalArgumentException("La data non è valida");
         }
         this.title = title;
@@ -32,7 +32,7 @@ public class Event {
         return title;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -62,6 +62,9 @@ public class Event {
         this.reservedPlaces -= reservedPlaces;
     }
 
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     @Override
     public String toString() {
