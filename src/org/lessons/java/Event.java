@@ -1,6 +1,9 @@
 package org.lessons.java;
 
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 
 public class Event {
@@ -12,41 +15,43 @@ public class Event {
 
 
     //COSTRUTTORI
-    public Event(String title, LocalDate date, int totalPlaces) throws IllegalArgumentException {
-
-        if (totalPlaces <= 0){
-            throw new IllegalArgumentException("Non puoi immettere numeri negativi");
-        }
-        if (date.isBefore(dateNow())){
-            throw new IllegalArgumentException("La data non è valida");
-        }
+    public Event(String title, LocalDate date, int totalPlaces) throws IllegalArgumentException, DateTimeParseException {
         this.title = title;
         this.date = date;
         this.totalPlaces = totalPlaces;
     }
 
-
-
     //METODI
 
     //GETTER
     public String getTitle() {
+        titleException();
         return title;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public String getDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        dateException();
+        return date.format(formatter);
     }
 
+
+
     public int getTotalPlaces() {
+        if (totalPlaces <= 0){
+            throw new IllegalArgumentException("You cannot enter negative numbers");
+        }
         return totalPlaces;
     }
 
     public int getReservedPlaces() {
+        if (reservedPlaces <= 0){
+            throw new IllegalArgumentException("You cannot enter negative numbers");
+        }
         return reservedPlaces;
     }
 
-    public LocalDate dateNow(){
+    private LocalDate dateNow(){
         LocalDate today = LocalDate.now();
         return today;
     }
@@ -58,14 +63,14 @@ public class Event {
 
     public void addPlaces(int addPlaces) {
         if (reservedPlaces > totalPlaces || (this.reservedPlaces + addPlaces) > totalPlaces){
-            throw new IllegalArgumentException("Il tuo numero di prenotazioni supera la capienza massima");
+            throw new IllegalArgumentException("Your number of reservations exceeds the maximum capacity");
         }
         this.reservedPlaces += addPlaces;
     }
 
     public void cancelPlaces(int canceledPlaces, int totalReserved) {
         if (this.reservedPlaces < canceledPlaces) {
-            throw new IllegalArgumentException("Il numero di posti cancellati supera il numero prenotato");
+            throw new IllegalArgumentException("The number of canceled seats exceeds the number booked");
         }
         this.reservedPlaces = totalReserved - canceledPlaces;
     }
@@ -74,11 +79,29 @@ public class Event {
         this.date = date;
     }
 
+    //EXCEPTION
+    private void titleException(){
+        if (title == null || title.isBlank()){
+            throw new IllegalArgumentException("The title is missing");
+        }
+    }
+
+    private void dateException(){
+        if (date == null) {
+            throw new IllegalArgumentException("The date is not available");
+        }
+        if (date.isBefore(dateNow())){
+            throw new IllegalArgumentException("The date is invalid");
+        }
+    }
+
+
+
     @Override
     public String toString() {
         return "Event{" +
-                "title='" + title + '\'' +
-                ", date='" + date + '\'' +
+                "title = '" + title + '\'' +
+                ", date = '" + date + '\'' +
                 '}';
     }
 }
