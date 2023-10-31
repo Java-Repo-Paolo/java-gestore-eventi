@@ -3,7 +3,6 @@ package org.lessons.java;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 
 public class Event {
@@ -15,7 +14,10 @@ public class Event {
 
 
     //COSTRUTTORI
-    public Event(String title, LocalDate date, int totalPlaces) throws IllegalArgumentException, DateTimeParseException {
+    public Event(String title, LocalDate date, int totalPlaces) throws IllegalArgumentException {
+        titleException(title);
+        dateException(date);
+        validateTotalPlace(totalPlaces);
         this.title = title;
         this.date = date;
         this.totalPlaces = totalPlaces;
@@ -25,30 +27,26 @@ public class Event {
 
     //GETTER
     public String getTitle() {
-        titleException();
         return title;
     }
 
     public String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        dateException();
         return date.format(formatter);
     }
-
-
-
+    
     public int getTotalPlaces() {
-        if (totalPlaces <= 0){
-            throw new IllegalArgumentException("You cannot enter negative numbers");
-        }
         return totalPlaces;
     }
-
+    
     public int getReservedPlaces() {
+        return reservedPlaces;
+    }
+
+    private void validateReservedPlaces() {
         if (reservedPlaces <= 0){
             throw new IllegalArgumentException("You cannot enter negative numbers");
         }
-        return reservedPlaces;
     }
 
     private LocalDate dateNow(){
@@ -58,7 +56,18 @@ public class Event {
 
     //SETTER
     public void setTitle(String title) {
+        titleException(title);
         this.title = title;
+    }
+
+    public void setDate(LocalDate date) {
+        dateException(date);
+        this.date = date;
+    }
+
+    public void setTotalPlaces(int totalPlaces) {
+        validateTotalPlace(totalPlaces);
+        this.totalPlaces = totalPlaces;
     }
 
     public void addPlaces(int addPlaces) {
@@ -75,18 +84,15 @@ public class Event {
         this.reservedPlaces = totalReserved - canceledPlaces;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
     //EXCEPTION
-    private void titleException(){
+    private void titleException(String title) throws IllegalArgumentException{
         if (title == null || title.isBlank()){
             throw new IllegalArgumentException("The title is missing");
         }
     }
 
-    private void dateException(){
+    private void dateException(LocalDate date) throws IllegalArgumentException{
         if (date == null) {
             throw new IllegalArgumentException("The date is not available");
         }
@@ -95,6 +101,12 @@ public class Event {
         }
     }
 
+    private void validateTotalPlace(int totalPlaces) throws IllegalArgumentException{
+        if (totalPlaces <= 0){
+            throw new IllegalArgumentException("You cannot enter negative numbers");
+        }
+        this.totalPlaces = totalPlaces;
+    }
 
 
     @Override

@@ -9,7 +9,8 @@ public class Concert extends Event{
     private LocalTime time;
     private BigDecimal price;
 
-    public Concert(String title, LocalDate date, int totalPlaces, LocalTime time, BigDecimal price) throws IllegalArgumentException {
+    public Concert(String title, LocalDate date, int totalPlaces, LocalTime time, BigDecimal price)
+            throws IllegalArgumentException {
         super(title, date, totalPlaces);
         this.time= time;
         this.price = price;
